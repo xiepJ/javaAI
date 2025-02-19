@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:replace="layout :: layout('Forum - View Post', ~{::div.content})">
+        <div class="content">
+            <div class="mb-4">
+                <a href="/" class="btn btn-secondary">Back to Posts</a>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h1 class="card-title" th:text="${post.title}">Post Title</h1>
+                        <span th:if="${post.hot}" class="badge bg-danger hot-badge">HOT</span>
+                    </div>
+                    <p class="card-text post-content" th:text="${post.content}">Content</p>
+                    <small class="text-muted" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">Date</small>
+                </div>
+            </div>
+            
+            <h3>Replies</h3>
+            <div class="list-group mb-4">
+                <div th:each="reply : ${post.replies}" class="list-group-item">
+                    <p class="reply-content" th:text="${reply.content}">Reply content</p>
+                    <small class="text-muted" th:text="${#temporals.format(reply.createdAt, 'yyyy-MM-dd HH:mm')}">Date</small>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h4>Add Reply</h4>
+                    <form th:action="@{/posts/{id}/replies(id=${post.id})}" th:object="${newReply}" method="post">
+                        <div class="mb-3">
+                            <textarea class="form-control" th:field="*{content}" rows="3" required></textarea>
+                            <div class="text-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Reply</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

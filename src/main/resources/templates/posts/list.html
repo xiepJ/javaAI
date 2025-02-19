@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:replace="layout :: layout('Forum - All Posts', ~{::div.content})">
+        <div class="content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Forum Posts</h1>
+                <div>
+                    <a href="/posts/new" class="btn btn-primary">New Post</a>
+                    <a href="/hot" class="btn btn-danger">Hot Posts</a>
+                </div>
+            </div>
+            
+            <div class="list-group">
+                <a th:each="post : ${posts}" 
+                   th:href="@{/posts/{id}(id=${post.id})}"
+                   class="list-group-item list-group-item-action">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="mb-1" th:text="${post.title}">Post Title</h5>
+                        <small th:if="${post.hot}" class="badge bg-danger hot-badge">HOT</small>
+                    </div>
+                    <p class="mb-1 post-content" th:text="${#strings.abbreviate(post.content, 200)}">Content</p>
+                    <div class="d-flex justify-content-between">
+                        <small th:text="${'Replies: ' + post.replies.size()}">Replies: 0</small>
+                        <small class="text-muted" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">Date</small>
+                    </div>
+                </a>
+            </div>
+            
+            <div th:if="${#lists.isEmpty(posts)}" class="alert alert-info mt-3">
+                No posts yet. Be the first to create one!
+            </div>
+        </div>
+    </div>
+</body>
+</html>
